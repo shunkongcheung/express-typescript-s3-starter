@@ -35,4 +35,4 @@ initDb({
 });
 
 // finish and export
-module.exports = app;
+export default app;

@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 import * as bcryptjs from "bcryptjs";
 
-import ModelController from "../model.con";
+import getController from "../getController";
 import { User } from "../../entities";
 
 const registerValidator = [
@@ -16,37 +16,32 @@ const registerValidator = [
     .optional()
 ];
 
-class RegisterController extends ModelController<typeof User> {
-  constructor() {
-    super({
-      model: User,
-      allowedMethods: ["create"],
-      authenticated: false,
-      validations: { create: registerValidator }
-    });
-  }
+const transformCreateData = async (user: User) => {
+  const { username, password } = user;
+  const data = await this.model.find({ username });
+  if (Array.isArray(data) && data.length > 0)
+    throw { message: "Username already exists" };
 
-  protected transformCreateData = async (user: User) => {
-    const { username, password } = user;
-    const data = await this.model.find({ username });
-    if (Array.isArray(data) && data.length > 0)
-      throw { message: "Username already exists" };
-
-    const saltRounds = Number(process.env.SALT_ROUNDS || "2");
-    const extendedData = {
-      firstName: "",
-      lastName: "",
-      ...user,
-      password: bcryptjs.hashSync(password, saltRounds)
-    };
-
-    const retData = { ...user };
-    delete retData.password;
-
-    return [extendedData, retData];
+  const saltRounds = Number(process.env.SALT_ROUNDS || "2");
+  const extendedData = {
+    firstName: "",
+    lastName: "",
+    ...user,
+    password: bcryptjs.hashSync(password, saltRounds)
   };
-}
 
-const controller = new RegisterController();
+  const retData = { ...user };
+  delete retData.password;
 
-export default controller.getRouter();
+  return [extendedData, retData];
+};
+
+const controller = getController({
+  model: User,
+  allowedMethods: ["create"],
+  authenticated: false,
+  transformCreateData,
+  validations: { create: registerValidator }
+});
+
+export default controller;

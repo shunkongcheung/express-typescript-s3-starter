@@ -2,7 +2,7 @@ import { body } from "express-validator";
 import * as bcryptjs from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 
-import ModelController from "../model.con";
+import getController from "../getController";
 import { User } from "../../entities";
 
 const loginValidator = [
@@ -10,33 +10,28 @@ const loginValidator = [
   body("password").isString()
 ];
 
-class LoginController extends ModelController<typeof User> {
-  constructor() {
-    super({
-      model: User,
-      allowedMethods: ["create"],
-      authenticated: false,
-      validations: { create: loginValidator }
-    });
-  }
+const transformCreateData = async (data: User) => {
+  const { username, password } = data;
+  const user = await User.findOne({ username });
+  if (!user) throw { message: "Invalid username" };
 
-  protected transformCreateData = async (data: User) => {
-    const { username, password } = data;
-    const user = await this.model.findOne({ username });
-    if (!user) throw { message: "Invalid username" };
+  const match = await bcryptjs.compare(password, user.password);
+  if (!match) throw { message: "Invalid password" };
 
-    const match = await bcryptjs.compare(password, user.password);
-    if (!match) throw { message: "Invalid password" };
+  const tokenData = { ...user };
+  delete tokenData.password;
 
-    const tokenData = { ...user };
-    delete tokenData.password;
+  const token = jwt.sign(tokenData, process.env.JWT_SECRET);
 
-    const token = jwt.sign(tokenData, process.env.JWT_SECRET);
+  return [null, { token }];
+};
 
-    return [null, { token }];
-  };
-}
+const controller = getController({
+  model: User,
+  allowedMethods: ["create"],
+  authenticated: false,
+  transformCreateData,
+  validations: { create: loginValidator }
+});
 
-const controller = new LoginController();
-
-export default controller.getRouter();
+export default controller;
