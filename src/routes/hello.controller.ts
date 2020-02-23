@@ -1,5 +1,8 @@
 import * as express from "express";
 import { Request, Response, NextFunction } from "express";
+import { query, matchedData } from "express-validator";
+
+import { validateRequest } from "../middlewares";
 
 const router = express.Router();
 
@@ -8,11 +11,22 @@ router.all("/", (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-router.get("/throw-error", () => {
-  throw "error format by throw error";
-});
-router.get("/next-error", (req: Request, res: Response, next: NextFunction) => {
-  next("error format by next");
-});
+router.get(
+  "/test",
+  [
+    query("some-number").isNumeric(),
+    query("some-string").isString(),
+    query("errOut")
+      .isIn(["throw", "next"])
+      .optional()
+  ],
+  validateRequest,
+  (req: Request, res: Response, next: NextFunction) => {
+    const data = matchedData(req);
+    if (data.errOut === "throw") throw "error format by throw error";
+    if (data.errOut === "next") return next("error format by next error");
+    res.json({ message: "nice you got it", data });
+  }
+);
 
 export default router;
