@@ -1,6 +1,8 @@
 import { createConnection } from "typeorm";
 import moment from "moment";
 
+import "./entities";
+
 interface Props {
   host: string;
   port?: number;
@@ -18,7 +20,7 @@ async function initDb({
 }: Props) {
   const time = moment().format("YYYY/MM/DD HH:mm");
   try {
-    await createConnection({
+    const conn = await createConnection({
       type: "postgres",
       host,
       port,
@@ -31,6 +33,7 @@ async function initDb({
       migrations: [`${__dirname}/migration/**/*.js`],
       subscribers: [`${__dirname}/subscriber/**/*.js`]
     });
+    await conn.runMigrations();
     console.log(
       `${time}: connected postgresql://${username}:*******@${host}:${port}/${database}.`
     );
