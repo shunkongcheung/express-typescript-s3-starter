@@ -38,6 +38,12 @@ Run the following command:
 npm i
 ```
 
+## Road MAP
+
+* add createdAt, createdBy, modifiedAt, enable to base.mod
+* add restful options to model.con to show the validators
+
+
 ## Authors
 
 N/A
