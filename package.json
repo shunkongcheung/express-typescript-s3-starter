@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "tsc": "tsc",
+    "dev": "concurrently \" tsc -w \" \"nodemon ./dist/local-dev.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
