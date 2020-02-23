@@ -21,6 +21,7 @@ class RegisterController extends ModelController<typeof User> {
     super({
       model: User,
       allowedMethods: ["create"],
+      authenticated: false,
       validations: { create: registerValidator }
     });
   }
