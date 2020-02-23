@@ -17,7 +17,10 @@
     "express": "^4.17.1",
     "express-mung": "^0.5.1",
     "express-validator": "^6.4.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "pg": "^7.18.2",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.22"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
