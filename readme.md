@@ -42,6 +42,7 @@ npm i
 
 * add createdAt, createdBy, modifiedAt, enable to base.mod
 * add restful options to model.con to show the validators
+* checkout migrations usage
 
 
 ## Authors
