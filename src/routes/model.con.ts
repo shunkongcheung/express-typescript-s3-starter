@@ -53,10 +53,12 @@ class ModelController<EntityShape extends typeof BaseEntity> {
     const validations = this.validations;
     const router = this.router;
 
+    const emptyMiddleware = (_, __, next: NextFunction) => next();
+
     if (isAllowed(allowedMethods || [], "create"))
       router.post(
         "/",
-        authenticated ? auth : null,
+        authenticated ? auth : emptyMiddleware,
         validations.create,
         validateRequest,
         this.createEntity
@@ -65,7 +67,7 @@ class ModelController<EntityShape extends typeof BaseEntity> {
     if (isAllowed(allowedMethods || [], "delete"))
       router.delete(
         "/:id",
-        authenticated ? auth : null,
+        authenticated ? auth : emptyMiddleware,
         validations.delete,
         validateRequest,
         this.deleteEntity
@@ -74,7 +76,7 @@ class ModelController<EntityShape extends typeof BaseEntity> {
     if (isAllowed(allowedMethods || [], "list"))
       router.get(
         "/",
-        authenticated ? auth : null,
+        authenticated ? auth : emptyMiddleware,
         validations.list,
         validateRequest,
         this.listEntities
@@ -83,7 +85,7 @@ class ModelController<EntityShape extends typeof BaseEntity> {
     if (isAllowed(allowedMethods || [], "update"))
       router.put(
         "/:id",
-        authenticated ? auth : null,
+        authenticated ? auth : emptyMiddleware,
         validations.update,
         validateRequest,
         this.updateEntity
@@ -92,7 +94,7 @@ class ModelController<EntityShape extends typeof BaseEntity> {
     if (isAllowed(allowedMethods || [], "retrieve"))
       router.get(
         "/:id",
-        // auth,
+        authenticated ? auth : emptyMiddleware,
         validations["retrieve"] || [],
         validateRequest,
         this.retieveEntityById
