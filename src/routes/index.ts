@@ -1,6 +1,6 @@
 import express from "express";
 
-import hello from "./hello.controller";
+import hello from "./hello.con";
 
 const router = express.Router();
 
