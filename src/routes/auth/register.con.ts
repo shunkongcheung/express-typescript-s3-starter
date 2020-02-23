@@ -27,11 +27,13 @@ const transformCreateData = async (user: User) => {
     ...user,
     password: bcryptjs.hashSync(password, saltRounds)
   };
+  const entity = Object.assign(new User(), extendedData);
+  await entity.save();
 
-  const retData = { ...user };
+  const retData = { ...user, id: entity.id };
   delete retData.password;
 
-  return [extendedData, retData];
+  return [null, retData];
 };
 
 const controller = getController({

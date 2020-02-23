@@ -44,13 +44,16 @@ const getCreateController = <EntityType extends typeof BaseEntity>({
       if (saveData === null) return res.status(201).json(respondData);
 
       // regular flow
-      const entity = new model();
-      Object.entries(saveData).map(([key, value]) => (entity[key] = value));
-
+      const entity = Object.assign(new model(), saveData);
       if (req.user) (entity as any).createdBy = req.user;
-      const result = await entity.save();
+      const result = (await entity.save()) as any;
 
-      const idData = { id: (result as any).id };
+      const idData = {
+        id: result.id,
+        createdAt: result.createdAt,
+        createdBy: result.createdBy.id,
+        updatedAt: result.updatedAt
+      };
       const catRespondData = Object.assign({}, respondData, idData);
       res.status(201).json(catRespondData);
     } catch (err) {

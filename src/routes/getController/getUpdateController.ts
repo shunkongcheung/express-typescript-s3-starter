@@ -38,12 +38,9 @@ const getUpdateController = <
   ) => {
     try {
       const { id } = req.params;
-      const entity = await model.findOne(id);
+      const entity = ((await model.findOne(id)) as unknown) as any;
       const entityData = matchedData(req);
-      const transformRet = await transformUpdateData(
-        entityData,
-        (entity as unknown) as EntityShape
-      );
+      const transformRet = await transformUpdateData(entityData, entity);
 
       const saveData = Array.isArray(transformRet)
         ? transformRet[0]
@@ -51,11 +48,19 @@ const getUpdateController = <
 
       const respondData = Array.isArray(transformRet)
         ? transformRet[1]
-        : transformRet;
+        : { ...entity, ...transformRet };
 
       await model.update({ id } as any, saveData);
 
-      return res.status(202).json(respondData);
+      const idData = {
+        id: entity.id,
+        createdAt: entity.createdAt,
+        createdBy: entity.createdBy.id,
+        updatedAt: new Date()
+      };
+      const catRespondData = Object.assign({}, respondData, idData);
+
+      return res.status(202).json(catRespondData);
     } catch (err) {
       next(err.message);
     }
