@@ -8,4 +8,11 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+router.get("/throw-error", () => {
+  throw "error format by throw error";
+});
+router.get("/next-error", (req: Request, res: Response, next: NextFunction) => {
+  next("error format by next");
+});
+
 export default router;
