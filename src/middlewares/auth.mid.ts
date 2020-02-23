@@ -14,7 +14,8 @@ const auth = async (req: Request, res: Response, next: any) => {
     if (!decoded) next("Unable to decode token");
     const { username } = decoded;
     const user = await User.findOne({ username });
-    req.user = user as any;
+    req.user = user as User;
+    next();
   } catch (err) {
     next(err);
   }

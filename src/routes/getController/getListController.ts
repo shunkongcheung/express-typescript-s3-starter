@@ -2,10 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { query } from "express-validator";
 import { BaseEntity } from "typeorm";
 
+import flattenCreatedBy from "./flattenCreatedBy";
+
 interface PaginateParam {
   skip: number;
   take: number;
-  order: { [x: string]: "DESC" | "ASC" };
+  order?: { [x: string]: "DESC" | "ASC" };
 }
 
 interface Props<EntityType extends typeof BaseEntity> {
@@ -48,10 +50,10 @@ const getListController = <EntityType extends typeof BaseEntity>({
       const paginateParams = {
         skip: Number(pageSize) * (Number(page) - 1),
         take: Number(pageSize),
-        order: { [order]: orderVal as "ASC" | "DESC" }
+        order: order ? { [order]: orderVal as "ASC" | "DESC" } : undefined
       };
       const results = await filterEntities(model, req, paginateParams);
-      return res.status(200).json(results);
+      return res.status(200).json(flattenCreatedBy(results));
     } catch (err) {
       next(err.message);
     }

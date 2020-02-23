@@ -62,7 +62,7 @@ const addRoute = (
   const emptyMiddleware = (_: any, __: any, next: NextFunction) => next();
   router[method](
     route,
-    isAuth && false ? auth : emptyMiddleware,
+    isAuth ? auth : emptyMiddleware,
     validation || emptyMiddleware,
     validateRequest,
     action

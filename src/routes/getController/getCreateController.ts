@@ -47,6 +47,7 @@ const getCreateController = <EntityType extends typeof BaseEntity>({
       const entity = new model();
       Object.entries(saveData).map(([key, value]) => (entity[key] = value));
 
+      if (req.user) (entity as any).createdBy = req.user;
       const result = await entity.save();
 
       const idData = { id: (result as any).id };

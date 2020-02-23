@@ -1,4 +1,4 @@
-import Base from "./base.ent";
+import Todo from "./todo.ent";
 import User from "./user.ent";
 
-export { Base, User };
+export { Todo, User };
