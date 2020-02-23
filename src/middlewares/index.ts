@@ -1,6 +1,6 @@
-import bodyFormatter from "./body-formatter.middleware";
-import errorHandler from "./error-handler.middleware";
-import logger from "./logger.middleware";
-import validateRequest from "./validate-request.middleware";
+import bodyFormatter from "./body-formatter.mid";
+import errorHandler from "./error-handler.mid";
+import logger from "./logger.mid";
+import validateRequest from "./validate-request.mid";
 
 export { bodyFormatter, errorHandler, logger, validateRequest };
