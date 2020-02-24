@@ -5,10 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \" tsc -w \" \"nodemon ./dist/local-dev.js\"",
-    "tsc": "tsc",
-    "to:gen": "typeorm migration:generate -n ",
-    "to:run": "typeorm migration:run",
-    "to:revert": "typeorm migration:revert"
+		"prebuild":"rm -r dist",
+    "build": "tsc",
+		"predb:gen":"npm run build",
+    "db:gen": "typeorm migration:generate -n",
+		"predb:run":"npm run build",
+    "db:run": "typeorm migration:run",
+		"predb:revert":"npm run build",
+    "db:revert": "typeorm migration:revert"
   },
   "keywords": [],
   "author": "",

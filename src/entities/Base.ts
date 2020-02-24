@@ -6,7 +6,7 @@ import {
   UpdateDateColumn
 } from "typeorm";
 
-import User from "./user.ent";
+import User from "./User";
 
 abstract class Base extends BaseEntity {
   @PrimaryGeneratedColumn()

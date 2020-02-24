@@ -5,7 +5,7 @@ import "reflect-metadata";
 import "./entities";
 
 async function initDb() {
-  const { database, port } = await getConnectionOptions();
+  const { database, port } = (await getConnectionOptions()) as any;
   const host = process.env.TYPEORM_HOST;
   const username = process.env.TYPEORM_USERNAME;
 
