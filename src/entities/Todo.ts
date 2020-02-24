@@ -1,6 +1,6 @@
 import { Entity, Column } from "typeorm";
 
-import Base from "./base.ent";
+import Base from "./Base";
 
 @Entity()
 class Todo extends Base {

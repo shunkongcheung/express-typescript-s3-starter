@@ -1,4 +1,4 @@
-import Todo from "./todo.ent";
-import User from "./user.ent";
+import Todo from "./Todo";
+import User from "./User";
 
 export { Todo, User };
