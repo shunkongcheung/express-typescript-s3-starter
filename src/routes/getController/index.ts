@@ -43,7 +43,6 @@ type GetEntity<T extends typeof BaseEntity> = (
 ) => Promise<null | object>;
 
 type OnDelete<EntityShape extends BaseEntity> = (
-  id: number,
   entity: EntityShape,
   req: Request
 ) => any;

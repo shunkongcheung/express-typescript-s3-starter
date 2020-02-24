@@ -11,7 +11,6 @@ interface Props<
 }
 
 type OnDelete<EntityShape extends BaseEntity> = (
-  id: number,
   entity: EntityShape,
   req: Request
 ) => any;
@@ -35,7 +34,7 @@ const getDeleteController = <
       const entity = (await model.findOne(id)) as EntityShape;
       if (!entity) return next("Entity does not exist");
 
-      await onDelete(Number(id), entity, req);
+      await onDelete(entity, req);
       await model.remove(entity);
       res.status(204).json({});
     } catch (err) {
