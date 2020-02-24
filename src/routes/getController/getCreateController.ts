@@ -12,7 +12,8 @@ interface TransformedData {
 }
 
 type TransformCreateData = (
-  entityData: TransformedData
+  entityData: TransformedData,
+  r: Request
 ) => Promise<TransformedData | [TransformedData | null, TransformedData]>;
 
 const defaultTransformCreateData: TransformCreateData = async entityData =>
@@ -29,7 +30,7 @@ const getCreateController = <EntityType extends typeof BaseEntity>({
   ) => {
     try {
       const entityData = matchedData(req);
-      const transformRet = await transformCreateData(entityData);
+      const transformRet = await transformCreateData(entityData, req);
 
       const saveData = Array.isArray(transformRet)
         ? transformRet[0]

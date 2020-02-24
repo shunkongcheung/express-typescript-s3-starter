@@ -20,7 +20,7 @@ interface Props<
   allowedMethods?: Array<Method>;
   authenticated?: boolean;
   filterEntities?: FilterEntities;
-  getEntity?: GetEntity<EntityType, EntityShape>;
+  getEntity?: GetEntity<EntityType>;
   model: EntityType;
   transformCreateData?: TCreateData;
   transformUpdateData?: TUpdateData<EntityShape>;
@@ -36,12 +36,12 @@ type FilterEntities = <T extends typeof BaseEntity>(
   r: Request
 ) => Promise<Array<BaseEntity>>;
 
-type GetEntity<T extends typeof BaseEntity, S extends BaseEntity> = (
+type GetEntity<T extends typeof BaseEntity> = (
   model: T,
   req: Request
-) => Promise<null | S>;
+) => Promise<null | object>;
 
-type TCreateData = (e: Data) => Promise<Data | [Data | null, Data]>;
+type TCreateData = (e: Data, r: Request) => Promise<Data | [Data | null, Data]>;
 
 type TUpdateData<T extends BaseEntity> = (
   e: Data,

@@ -4,34 +4,28 @@ import { param } from "express-validator";
 
 import flattenCreatedBy from "./flattenCreatedBy";
 
-interface Props<
-  EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity
-> {
+interface Props<EntityType extends typeof BaseEntity> {
   model: EntityType;
-  getEntity?: GetEntity<EntityType, EntityShape>;
+  getEntity?: GetEntity<EntityType>;
 }
 
-type GetEntity<T extends typeof BaseEntity, S extends object> = (
+type GetEntity<T extends typeof BaseEntity> = (
   model: T,
   req: Request
-) => Promise<null | S>;
+) => Promise<null | object>;
 
 const defaultGetEntity = async <
   EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity
+  S extends object
 >(
   model: EntityType,
   req: Request
-) => model.findOne(req.params.id) as Promise<EntityShape>;
+) => model.findOne(req.params.id) as Promise<S>;
 
-const getRetrieveController = <
-  EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity
->({
+const getRetrieveController = <EntityType extends typeof BaseEntity>({
   model,
   getEntity = defaultGetEntity
-}: Props<EntityType, EntityShape>) => {
+}: Props<EntityType>) => {
   const retrieveValidation = [param("id").isString()];
 
   const retrieveEntity = async (
