@@ -37,6 +37,7 @@ const getDeleteController = <
       await onDelete(entity, req);
       await model.remove(entity);
       res.status(204).json({});
+      next();
     } catch (err) {
       next(err.message);
     }

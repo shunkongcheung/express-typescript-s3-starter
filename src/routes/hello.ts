@@ -26,6 +26,7 @@ router.get(
     if (data.errOut === "throw") throw "error format by throw error";
     if (data.errOut === "next") return next("error format by next error");
     res.json({ message: "nice you got it", data });
+    next();
   }
 );
 

@@ -60,7 +60,8 @@ const getUpdateController = <
       };
       const catRespondData = Object.assign({}, respondData, idData);
 
-      return res.status(202).json(catRespondData);
+      res.status(202).json(catRespondData);
+      next();
     } catch (err) {
       next(err.message);
     }

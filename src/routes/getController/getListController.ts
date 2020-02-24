@@ -53,7 +53,8 @@ const getListController = <EntityType extends typeof BaseEntity>({
         order: order ? { [order]: orderVal as "ASC" | "DESC" } : undefined
       };
       const results = await filterEntities(model, req, paginateParams);
-      return res.status(200).json(flattenCreatedBy(results));
+      res.status(200).json(flattenCreatedBy(results));
+      next();
     } catch (err) {
       next(err.message);
     }

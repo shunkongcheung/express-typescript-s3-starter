@@ -57,6 +57,7 @@ const getCreateController = <EntityType extends typeof BaseEntity>({
       };
       const catRespondData = Object.assign({}, respondData, idData);
       res.status(201).json(catRespondData);
+      next();
     } catch (err) {
       next(err.message);
     }

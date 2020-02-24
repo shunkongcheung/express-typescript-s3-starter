@@ -17,12 +17,12 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(bodyFormatter);
-app.use(logger);
 
 // create routes
 app.use("/", router); // path must route to lambda
 app.use("/.netlify/functions/server", router); // path must route to lambda
 
+app.use(logger);
 app.use(errorHandler); // error handling. after all route
 
 // database initializiation

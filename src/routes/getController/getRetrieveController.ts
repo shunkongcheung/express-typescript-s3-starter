@@ -37,7 +37,8 @@ const getRetrieveController = <EntityType extends typeof BaseEntity>({
       const entity = await getEntity(model, req);
       if (!entity) return next("Entity does not exist");
 
-      return res.status(200).json(flattenCreatedBy(entity));
+      res.status(200).json(flattenCreatedBy(entity));
+      next();
     } catch (err) {
       next(err.message);
     }
