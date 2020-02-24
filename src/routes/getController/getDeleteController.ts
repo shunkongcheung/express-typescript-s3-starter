@@ -2,13 +2,27 @@ import { NextFunction, Request, Response } from "express";
 import { BaseEntity } from "typeorm";
 import { param } from "express-validator";
 
-interface Props<EntityType extends typeof BaseEntity> {
+interface Props<
+  EntityType extends typeof BaseEntity,
+  EntityShape extends BaseEntity
+> {
   model: EntityType;
+  onDelete?: OnDelete<EntityShape>;
 }
 
-const getDeleteController = <EntityType extends typeof BaseEntity>({
-  model
-}: Props<EntityType>) => {
+type OnDelete<EntityShape extends BaseEntity> = (
+  id: number,
+  entity: EntityShape,
+  req: Request
+) => any;
+
+const getDeleteController = <
+  EntityType extends typeof BaseEntity,
+  EntityShape extends BaseEntity
+>({
+  model,
+  onDelete = () => {}
+}: Props<EntityType, EntityShape>) => {
   const deleteValidation = [param("id").isString()];
 
   const deleteEntity = async (
@@ -18,9 +32,10 @@ const getDeleteController = <EntityType extends typeof BaseEntity>({
   ) => {
     try {
       const { id } = req.params;
-      const entity = await model.findOne(id);
+      const entity = (await model.findOne(id)) as EntityShape;
       if (!entity) return next("Entity does not exist");
 
+      await onDelete(Number(id), entity, req);
       await model.remove(entity);
       res.status(204).json({});
     } catch (err) {

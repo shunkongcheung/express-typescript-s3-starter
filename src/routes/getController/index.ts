@@ -22,6 +22,7 @@ interface Props<
   filterEntities?: FilterEntities;
   getEntity?: GetEntity<EntityType>;
   model: EntityType;
+  onDelete?: OnDelete<EntityShape>;
   transformCreateData?: TCreateData;
   transformUpdateData?: TUpdateData<EntityShape>;
   validations?: { [x: string]: Array<ValidationChain> };
@@ -40,6 +41,12 @@ type GetEntity<T extends typeof BaseEntity> = (
   model: T,
   req: Request
 ) => Promise<null | object>;
+
+type OnDelete<EntityShape extends BaseEntity> = (
+  id: number,
+  entity: EntityShape,
+  req: Request
+) => any;
 
 type TCreateData = (e: Data, r: Request) => Promise<Data | [Data | null, Data]>;
 
@@ -81,13 +88,17 @@ const getController = <
     filterEntities,
     getEntity,
     model,
+    onDelete,
     transformCreateData,
     transformUpdateData,
     validations = {}
   } = props;
 
   const { createEntity } = getCreateController({ model, transformCreateData });
-  const { deleteValidation, deleteEntity } = getDeleteController({ model });
+  const { deleteValidation, deleteEntity } = getDeleteController({
+    model,
+    onDelete
+  });
   const { listEntities, defaultListValidation } = getListController({
     model,
     filterEntities
