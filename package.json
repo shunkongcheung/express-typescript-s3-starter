@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tsc": "tsc",
     "dev": "concurrently \" tsc -w \" \"nodemon ./dist/local-dev.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc",
+		"to:gen":"typeorm migration:generate -n ",
+		"to:run":"typeorm migration:run",
+		"to:revert":"typeorm migration:revert"
   },
   "keywords": [],
   "author": "",

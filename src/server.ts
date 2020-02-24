@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import initDb from "./init-db";
+import initDb from "./initDb";
 import router from "./routes";
 import { bodyFormatter, errorHandler, logger } from "./middlewares";
 
@@ -26,13 +26,7 @@ app.use("/.netlify/functions/server", router); // path must route to lambda
 app.use(errorHandler); // error handling. after all route
 
 // database initializiation
-initDb({
-  host: "localhost",
-  port: 5432,
-  database: "express_starter",
-  username: "express_starter_user",
-  password: process.env.DB_PASSWORD || ""
-});
+initDb();
 
 // finish and export
 export default app;

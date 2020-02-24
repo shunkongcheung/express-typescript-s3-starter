@@ -15,8 +15,6 @@ createdb express_starter
 * setup user credential
 ```
 psql express_starter
-postgres=# CREATE database express_starter;
-CREATE DATABASE
 postgres=# CREATE user express_starter_user with password 'password';
 CREATE ROLE
 postgres=# ALTER role express_starter_user set client_encoding to 'utf8';
@@ -25,7 +23,7 @@ postgres=# ALTER role express_starter_user set default_transaction_isolation to 
 ALTER ROLE
 postgres=# ALTER role express_starter_user set timezone to 'UTC';
 ALTER ROLE
-postgres=# GRANT all privileges on database express_starter to express_starter;
+postgres=# GRANT all privileges on database express_starter to express_starter_user;
 GRANT
 postgres=# \q
 ```
@@ -40,9 +38,7 @@ npm i
 
 ## Road MAP
 
-* add createdAt, createdBy, modifiedAt, enable to base.mod
-* add restful options to model.con to show the validators
-* checkout migrations usage
+* add restful options to base to show the validators
 * netlify
 
 

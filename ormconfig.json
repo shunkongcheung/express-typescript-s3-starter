@@ -1,0 +1,12 @@
+{
+      "type": "postgres",
+      "port": 5432,
+      "database": "express_starter",
+			"syncchronize":false,
+      "logging": false,
+      "entities": ["dist/entities/**/*.js"],
+		 	"migrations": ["dist/migrations/**/*.js"],
+			"cli": {
+        "migrationsDir": "src/migrations"
+    	}
+}
