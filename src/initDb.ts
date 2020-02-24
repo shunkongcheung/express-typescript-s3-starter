@@ -5,9 +5,8 @@ import "reflect-metadata";
 import "./entities";
 
 async function initDb() {
-  const { database } = await getConnectionOptions();
+  const { database, port } = await getConnectionOptions();
   const host = process.env.TYPEORM_HOST;
-  const port = process.env.TYPEORM_PORT;
   const username = process.env.TYPEORM_USERNAME;
 
   const time = moment().format("YYYY/MM/DD HH:mm");
