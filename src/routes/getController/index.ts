@@ -41,7 +41,7 @@ type FilterEntities = <T extends typeof BaseEntity>(
 type GetEntity<T extends typeof BaseEntity> = (
   model: T,
   req: Request
-) => Promise<null | object>;
+) => Promise<null | object | Buffer>;
 
 type OnDelete<EntityShape extends BaseEntity> = (
   entity: EntityShape,

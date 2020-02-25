@@ -32,8 +32,8 @@ const downloadFromS3 = async (Key: string) => {
   const [s3, Bucket] = getS3();
   const params = { Bucket, Key };
   const data = await s3.getObject(params).promise();
-  const buffer = data.Body.toString("base64"); // Use the encoding necessary
-  return { imageUrl: `data:image/png;base64, ${buffer}` };
+  const buffer = data.Body as Buffer; // Use the encoding necessary
+  return buffer;
 };
 
 const uploadToS3 = async (name: string, Body: Buffer) => {

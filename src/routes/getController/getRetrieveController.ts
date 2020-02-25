@@ -12,7 +12,7 @@ interface Props<EntityType extends typeof BaseEntity> {
 type GetEntity<T extends typeof BaseEntity> = (
   model: T,
   req: Request
-) => Promise<null | object>;
+) => Promise<null | object | Buffer>;
 
 const defaultGetEntity = async <
   EntityType extends typeof BaseEntity,
@@ -36,8 +36,12 @@ const getRetrieveController = <EntityType extends typeof BaseEntity>({
     try {
       const entity = await getEntity(model, req);
       if (!entity) return next("Entity does not exist");
+      if (Buffer.isBuffer(entity)) {
+        res.status(200).end(entity);
+      } else {
+        res.status(200).json(flattenCreatedBy(entity));
+      }
 
-      res.status(200).json(flattenCreatedBy(entity));
       next();
     } catch (err) {
       next(err.message);
