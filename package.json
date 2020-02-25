@@ -5,14 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \" tsc -w \" \"nodemon ./dist/local-dev.js\"",
-		"prebuild":"rm -r dist",
+    "prebuild": "rm -rf dist",
     "build": "tsc",
-		"predb:gen":"npm run build",
-    "db:gen": "typeorm migration:generate -n",
-		"predb:run":"npm run build",
-    "db:run": "typeorm migration:run",
-		"predb:revert":"npm run build",
-    "db:revert": "typeorm migration:revert"
+    "db:gen": "npm run build && typeorm migration:generate -n",
+    "db:run": "npm run build && typeorm migration:run",
+    "db:revert": "npm run build && typeorm migration:revert"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +28,7 @@
     "multer": "^1.4.2",
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.13",
+    "serverless-http": "^2.3.1",
     "typeorm": "^0.2.22"
   },
   "devDependencies": {
