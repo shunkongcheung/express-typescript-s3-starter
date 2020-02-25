@@ -25,9 +25,16 @@ async function dbMiddleware(_: any, __: any, next: NextFunction) {
 const app = express();
 
 app.use(dbMiddleware);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,POST,DELETE,OPTIONS",
+    preflightContinue: true
+  })
+);
 
 app.use(bodyFormatter);
 

@@ -5,6 +5,7 @@ import { BaseEntity } from "typeorm";
 import getCreateController from "./getCreateController";
 import getDeleteController from "./getDeleteController";
 import getListController from "./getListController";
+import getOptionsController from "./getOptionsController";
 import getRetrieveController from "./getRetrieveController";
 import getUpdateController from "./getUpdateController";
 import { auth, validateRequest } from "../../middlewares";
@@ -111,28 +112,38 @@ const getController = <
     transformUpdateData
   });
 
+  const fVals = {
+    create: validations.create,
+    delete: deleteValidation,
+    list: (validations?.list ?? []).concat(defaultListValidation),
+    retrieve: (validations?.retrieve ?? []).concat(retrieveValidation),
+    update: (validations?.update ?? []).concat(defaultUpdateValidation)
+  };
+  const { getOptions } = getOptionsController({
+    allowedMethods,
+    authenticated,
+    validations: fVals
+  });
+
   const router = Router();
   const isAuth = authenticated !== false; // undefined / null / true will be true
 
   if (isAllowed("create", allowedMethods))
-    addRoute(router, "post", "/", isAuth, validations.create, createEntity);
+    addRoute(router, "post", "/", isAuth, fVals.create, createEntity);
 
   if (isAllowed("delete", allowedMethods))
-    addRoute(router, "delete", "/:id", isAuth, deleteValidation, deleteEntity);
+    addRoute(router, "delete", "/:id", isAuth, fVals.delete, deleteEntity);
 
-  if (isAllowed("list", allowedMethods)) {
-    const listVal = (validations?.list ?? []).concat(defaultListValidation);
-    addRoute(router, "get", "/", isAuth, listVal, listEntities);
-  }
-  if (isAllowed("retrieve", allowedMethods)) {
-    const retVal = (validations?.retrieve ?? []).concat(retrieveValidation);
-    addRoute(router, "get", "/:id", isAuth, retVal, retrieveEntity);
-  }
+  if (isAllowed("list", allowedMethods))
+    addRoute(router, "get", "/", isAuth, fVals.list, listEntities);
 
-  if (isAllowed("update", allowedMethods)) {
-    const upVal = (validations?.update ?? []).concat(defaultUpdateValidation);
-    addRoute(router, "put", "/:id", isAuth, upVal, updateEntity);
-  }
+  if (isAllowed("retrieve", allowedMethods))
+    addRoute(router, "get", "/:id", isAuth, fVals.retrieve, retrieveEntity);
+
+  if (isAllowed("update", allowedMethods))
+    addRoute(router, "put", "/:id", isAuth, fVals.update, updateEntity);
+
+  router.options("/", getOptions);
 
   return router;
 };

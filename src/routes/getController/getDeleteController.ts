@@ -22,7 +22,7 @@ const getDeleteController = <
   model,
   onDelete = () => {}
 }: Props<EntityType, EntityShape>) => {
-  const deleteValidation = [param("id").isString()];
+  const deleteValidation = [param("id").isNumeric()];
 
   const deleteEntity = async (
     req: Request,

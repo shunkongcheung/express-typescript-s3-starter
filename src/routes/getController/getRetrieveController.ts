@@ -26,7 +26,7 @@ const getRetrieveController = <EntityType extends typeof BaseEntity>({
   model,
   getEntity = defaultGetEntity
 }: Props<EntityType>) => {
-  const retrieveValidation = [param("id").isString()];
+  const retrieveValidation = [param("id").isNumeric()];
 
   const retrieveEntity = async (
     req: Request,
