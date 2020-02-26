@@ -1,5 +1,6 @@
 import { ValidationChain } from "express-validator";
 import { Response } from "express";
+import { CustomValidation } from "express-validator/src/context-items";
 
 interface Props {
   allowedMethods?: Array<Method>;
@@ -9,39 +10,50 @@ interface Props {
 
 type Method = "list" | "retrieve" | "create" | "update" | "delete";
 
-type DescType = "string" | "numeric" | null;
+type DescType = "string" | "numeric" | "select" | "custom";
 
 interface Desc {
   name: string;
   required: boolean;
   location: "body" | "query" | "params";
   type: DescType;
+  options?: Array<string>;
 }
 
-function getValidatorType(validator: Function): DescType {
-  if (validator.name === "isNumeric") return "numeric";
+interface ValidatorMeta {
+  type: DescType;
+  options?: Array<string>;
+}
+
+function getValidatorMeta({ validator, options }: any): ValidatorMeta {
+  if (validator.name === "isIn") return { type: "select", options };
+  if (validator.name === "isNumeric") return { type: "numeric" };
   if (validator.toString().includes(`typeof value === 'string'`))
-    return "string";
-  return null;
+    return { type: "string" };
+
+  return { type: "custom" };
 }
 
 function getValidationDesc(
   validationChain: Array<ValidationChain>
 ): Array<Desc> {
   if (!Array.isArray(validationChain)) return [];
-  return validationChain.map((validation: ValidationChain) => ({
+  return validationChain.map((validation: ValidationChain) => {
     // @ts-ignore
-    name: validation.builder.fields[0],
-    // @ts-ignore
-    required: !validation.builder.optional,
-    // @ts-ignore
-    location: validation.builder.locations[0],
-    // @ts-ignore
-    type: validation.builder.stack.reduce(
-      (o: DescType, c: any) => o || getValidatorType(c.validator),
+    const meta = validation.builder.stack.reduce(
+      (o: DescType, c: any) => o || getValidatorMeta(c),
       null
-    )
-  }));
+    );
+    return {
+      // @ts-ignore
+      name: validation.builder.fields[0],
+      // @ts-ignore
+      required: !validation.builder.optional,
+      // @ts-ignore
+      location: validation.builder.locations[0],
+      ...meta
+    };
+  });
 }
 
 function getOptionsController({
