@@ -12,7 +12,7 @@ const fileMiddleware = multer({
 }).single("file");
 
 const getS3 = () => {
-  const BUCKET_NAME = "fenshare-share";
+  const BUCKET_NAME =process.env.S3_BUCKET_NAME;
   AWS.config.update({
     accessKeyId: process.env.S3_ACCESS_ID,
     secretAccessKey: process.env.S3_SECRET_KEY
