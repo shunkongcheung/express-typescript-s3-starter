@@ -11,19 +11,18 @@ interface PaginateParam {
 }
 
 interface Props<EntityType extends typeof BaseEntity> {
-  filterEntities?: FilterEntities;
+  filterEntities?: FilterEntities<EntityType>;
   model: EntityType;
 }
 
-type FilterEntities = <EntityType extends typeof BaseEntity>(
+type FilterEntities<EntityType extends typeof BaseEntity> = (
   model: EntityType,
-  req: Request,
-  pagainateParams: PaginateParam
-) => Promise<Array<BaseEntity>>;
+  pagainateParams: PaginateParam,
+  req: Request
+) => Promise<Array<any>>;
 
 const defaultFilterEntities = async <EntityType extends typeof BaseEntity>(
   model: EntityType,
-  req: Request,
   paginateParams: PaginateParam
 ) => {
   return model.find(paginateParams);
@@ -52,7 +51,7 @@ const getListController = <EntityType extends typeof BaseEntity>({
         take: Number(pageSize),
         order: order ? { [order]: orderVal as "ASC" | "DESC" } : undefined
       };
-      const results = await filterEntities(model, req, paginateParams);
+      const results = await filterEntities(model, paginateParams, req);
       res.status(200).json(flattenCreatedBy(results));
       next();
     } catch (err) {

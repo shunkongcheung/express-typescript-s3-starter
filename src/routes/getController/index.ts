@@ -20,7 +20,7 @@ interface Props<
 > {
   allowedMethods?: Array<Method>;
   authenticated?: boolean;
-  filterEntities?: FilterEntities;
+  filterEntities?: FilterEntities<EntityType>;
   getEntity?: GetEntity<EntityType>;
   model: EntityType;
   onDelete?: OnDelete<EntityShape>;
@@ -33,10 +33,11 @@ interface Data {
   [x: string]: any;
 }
 
-type FilterEntities = <T extends typeof BaseEntity>(
+type FilterEntities<T extends typeof BaseEntity> = (
   m: T,
+  p: object,
   r: Request
-) => Promise<Array<BaseEntity>>;
+) => Promise<Array<any>>;
 
 type GetEntity<T extends typeof BaseEntity> = (
   model: T,
