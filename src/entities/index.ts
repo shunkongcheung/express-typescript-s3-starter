@@ -1,5 +1,5 @@
-import File from "./File";
-import Todo from "./Todo";
-import User from "./User";
+import BaseUser from "./BaseUser";
+import getBaseEntity from "./getBaseEntity";
+import getFileEntity from "./getFileEntity";
 
-export { File, Todo, User };
+export { BaseUser, getBaseEntity, getFileEntity };

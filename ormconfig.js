@@ -11,9 +11,9 @@ module.exports = {
   database: process.env.TYPEORM_DATABASE,
   syncchronize: false,
   logging: false,
-  entities: ["dist/entities/**/*.js"],
-  migrations: ["dist/migrations/**/*.js"],
+  entities: ["dist/example/entities/**/*.js"],
+  migrations: ["dist/example/migrations/**/*.js"],
   cli: {
-    migrationsDir: "src/migrations"
+    migrationsDir: "example/migrations"
   }
 };

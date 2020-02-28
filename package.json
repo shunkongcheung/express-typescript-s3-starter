@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \" tsc -w \" \"nodemon ./dist/local-dev.js\"",
+    "dev": "concurrently \" tsc -w \" \"nodemon ./dist/example/local-dev.js\"",
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "db:gen": "npm run build && typeorm migration:generate -n",
