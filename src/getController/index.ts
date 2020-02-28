@@ -8,7 +8,8 @@ import getListController from "./getListController";
 import getOptionsController from "./getOptionsController";
 import getRetrieveController from "./getRetrieveController";
 import getUpdateController from "./getUpdateController";
-import { auth, validateRequest } from "../../middlewares";
+import { getAuthMiddleware, validateRequest } from "../middlewares";
+import { BaseUser } from "../entities";
 
 type Action = (req: Request, res: Response, next: NextFunction) => any;
 
@@ -16,7 +17,8 @@ type Method = "list" | "retrieve" | "create" | "update" | "delete";
 
 interface Props<
   EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity
+  EntityShape extends BaseEntity,
+  UserType extends typeof BaseUser
 > {
   allowedMethods?: Array<Method>;
   authenticated?: boolean;
@@ -26,6 +28,7 @@ interface Props<
   onDelete?: OnDelete<EntityShape>;
   transformCreateData?: TCreateData;
   transformUpdateData?: TUpdateData<EntityShape>;
+  userModel: UserType;
   validations?: { [x: string]: Array<ValidationChain> };
 }
 
@@ -59,18 +62,19 @@ type TUpdateData<T extends BaseEntity> = (
 const isAllowed = (method: Method, allowedMethods: Array<Method>) =>
   !allowedMethods || allowedMethods.includes(method);
 
-const addRoute = (
+const addRoute = <T extends typeof BaseUser>(
   router: any,
   method: "get" | "put" | "post" | "delete",
   route: string,
   isAuth: boolean,
+  userModel: T,
   validation: Array<ValidationChain>,
   action: Action
 ) => {
   const emptyMiddleware = (_: any, __: any, next: NextFunction) => next();
   router[method](
     route,
-    isAuth ? auth : emptyMiddleware,
+    isAuth ? getAuthMiddleware(userModel) : emptyMiddleware,
     validation || emptyMiddleware,
     validateRequest,
     action
@@ -79,9 +83,10 @@ const addRoute = (
 
 const getController = <
   EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity
+  EntityShape extends BaseEntity,
+  UserType extends typeof BaseUser
 >(
-  props: Props<EntityType, EntityShape>
+  props: Props<EntityType, EntityShape, UserType>
 ) => {
   const {
     allowedMethods,
@@ -92,6 +97,7 @@ const getController = <
     onDelete,
     transformCreateData,
     transformUpdateData,
+    userModel: u,
     validations = {}
   } = props;
 
@@ -130,19 +136,19 @@ const getController = <
   const isAuth = authenticated !== false; // undefined / null / true will be true
 
   if (isAllowed("create", allowedMethods))
-    addRoute(router, "post", "/", isAuth, fVals.create, createEntity);
+    addRoute(router, "post", "/", isAuth, u, fVals.create, createEntity);
 
   if (isAllowed("delete", allowedMethods))
-    addRoute(router, "delete", "/:id", isAuth, fVals.delete, deleteEntity);
+    addRoute(router, "delete", "/:id", isAuth, u, fVals.delete, deleteEntity);
 
   if (isAllowed("list", allowedMethods))
-    addRoute(router, "get", "/", isAuth, fVals.list, listEntities);
+    addRoute(router, "get", "/", isAuth, u, fVals.list, listEntities);
 
   if (isAllowed("retrieve", allowedMethods))
-    addRoute(router, "get", "/:id", isAuth, fVals.retrieve, retrieveEntity);
+    addRoute(router, "get", "/:id", isAuth, u, fVals.retrieve, retrieveEntity);
 
   if (isAllowed("update", allowedMethods))
-    addRoute(router, "put", "/:id", isAuth, fVals.update, updateEntity);
+    addRoute(router, "put", "/:id", isAuth, u, fVals.update, updateEntity);
 
   router.options("/", getOptions);
 

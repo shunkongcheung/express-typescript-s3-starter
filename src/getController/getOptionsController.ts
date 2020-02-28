@@ -1,6 +1,5 @@
 import { ValidationChain } from "express-validator";
 import { Response } from "express";
-import { CustomValidation } from "express-validator/src/context-items";
 
 interface Props {
   allowedMethods?: Array<Method>;
