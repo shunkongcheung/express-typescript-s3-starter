@@ -1,9 +1,9 @@
 {
   "name": "shunkongcheung-express-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "express, typeorm, typescript restful starter kit with authentication & s3 support",
   "main": "dist/index.js",
-	"types":"dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "concurrently \" tsc -w \" \"nodemon ./dist/example/local-dev.js\"",
     "prebuild": "rm -rf dist",
@@ -12,7 +12,11 @@
     "db:run": "npm run build && typeorm migration:run",
     "db:revert": "npm run build && typeorm migration:revert"
   },
-	"files":["dist/**/*", "readme.md", "example/**/*"],
+  "files": [
+    "dist/**/*",
+    "readme.md",
+    "example/**/*"
+  ],
   "keywords": [],
   "author": "Shun Kong Cheung",
   "license": "ISC",
