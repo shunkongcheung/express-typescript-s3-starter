@@ -280,30 +280,18 @@ type TUpdateData<T extends BaseEntity> = (
 
 
 ## Example
-* Example can be found in `example`
-	1. clone the repo by:
-
-```
-git clone https://github.com/shunkongcheung/express-starter
-cd express-starter
-```
-
-	2. setup `.env` as stated above (at least JWT_SECRET and TYPEORM_*)
-	3. run the following commands:
-
-```
-npm run db:run
-npm run dev
-```
-
-	4. visit the following routes (`/files` is only available with S3 setup):
-		* `http://localhost:8000`
-		* `http://localhost:8000/auth/register`(POST)
-		* `http://localhost:8000/auth/login`(POST)
-		* `http://localhost:8000/todos`(GET, POST)
-		* `http://localhost:8000/todos/:id`(GET, PUT, DELETE)
-		* `http://localhost:8000/files`(GET, POST)
-		* `http://localhost:8000/files/:id`(GET, PUT, DELETE)
+Example can be found in `example`
+1. clone the repo by `git clone https://github.com/shunkongcheung/express-starter && cd express-starter`
+2. setup `.env` as stated above (at least JWT_SECRET and TYPEORM_*)
+3. run the following commands: `npm run db:run && npm run dev`
+4. visit the following routes (`/files` is only available with S3 setup):
+	* `http://localhost:8000`
+	* `http://localhost:8000/auth/register`(POST)
+	* `http://localhost:8000/auth/login`(POST)
+	* `http://localhost:8000/todos`(GET, POST)
+	* `http://localhost:8000/todos/:id`(GET, PUT, DELETE)
+	* `http://localhost:8000/files`(GET, POST)
+	* `http://localhost:8000/files/:id`(GET, PUT, DELETE)
 
 
 ## Road MAP
