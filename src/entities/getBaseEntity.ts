@@ -10,7 +10,7 @@ import BaseUser from "./BaseUser";
 
 function getBaseEntity<UserType extends typeof BaseUser>(
   userModel: UserType
-): any {
+): typeof BaseEntity {
   abstract class Base extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -34,7 +34,7 @@ function getBaseEntity<UserType extends typeof BaseUser>(
     )
     createdBy: UserType;
   }
-  return Base;
+  return (Base as unknown) as typeof BaseEntity;
 }
 
 export default getBaseEntity;
