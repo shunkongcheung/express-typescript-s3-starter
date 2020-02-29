@@ -15,7 +15,7 @@ type Action = (req: Request, res: Response, next: NextFunction) => any;
 
 type Method = "list" | "retrieve" | "create" | "update" | "delete";
 
-interface Props<
+export interface Props<
   EntityType extends typeof BaseEntity,
   EntityShape extends BaseEntity
 > {
