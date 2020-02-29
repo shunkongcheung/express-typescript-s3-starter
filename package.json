@@ -5,14 +5,15 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "concurrently \" tsc -w \" \"nodemon ./dist/example/local-dev.js\"",
+    "dev": "concurrently \" tsc --project tsconfig-example.json -w \" \"nodemon ./dist-example/example/local-dev.js\"",
+    "build": "tsc",
     "prebuild": "rm -rf dist",
     "prepare": "npm run build",
     "postversion": "git push && git push --tags",
-    "build": "tsc",
-    "db:gen": "npm run build && typeorm migration:generate -n",
-    "db:run": "npm run build && typeorm migration:run",
-    "db:revert": "npm run build && typeorm migration:revert"
+		"devbuild":"rm -rf dist-example && tsc --project tsconfig-example.json",
+    "db:gen": "npm run devbuild && typeorm migration:generate -n",
+    "db:run": "npm run devbuild && typeorm migration:run",
+    "db:revert": "npm run devbuild && typeorm migration:revert"
   },
   "files": [
     "dist/**/*",

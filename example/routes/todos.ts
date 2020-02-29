@@ -1,15 +1,13 @@
 import { body } from "express-validator";
 
-import getController from "../../src/getController";
-
-import { Todo, User } from "../entities";
+import getController from "../getController";
+import { Todo } from "../entities";
 
 const validations = [body("name").isString(), body("content").isString()];
 
-const controller = getController<typeof Todo, Todo, typeof User>({
+const controller = getController({
   model: Todo,
-  validations: { create: validations, update: validations },
-  userModel: User
+  validations: { create: validations, update: validations }
 });
 
 export default controller;

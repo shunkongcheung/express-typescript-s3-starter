@@ -1,6 +1,7 @@
 # deployment and builds
 .serverless
 dist
+dist-example
 
 # environment filed
 .env
