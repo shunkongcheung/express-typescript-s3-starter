@@ -1,8 +1,8 @@
-import { User } from "./entities";
+import { BaseUser } from "./entities";
 declare global {
   namespace Express {
     export interface Request {
-      user?: User;
+      user?: BaseUser;
     }
   }
 }
