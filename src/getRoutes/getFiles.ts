@@ -51,6 +51,16 @@ function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
     return retData;
   };
 
+  const filterEntities = async (model: F, params: object) => {
+    const entities = await model.find(params);
+    return entities.map((entity: any) => {
+      const retData = { ...entity };
+      delete retData.s3Key;
+      delete retData.url;
+      return retData;
+    });
+  };
+
   const getEntity = async (model: typeof File, req: Request) => {
     const { id } = req.params;
     const entity = await model.findOne(id);
@@ -72,6 +82,7 @@ function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
   const controller = getController({
     model: File,
     allowedMethods: ["list", "retrieve", "create", "delete"],
+    filterEntities,
     getEntity,
     onDelete,
     transformCreateData,
