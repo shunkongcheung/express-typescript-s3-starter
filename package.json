@@ -20,6 +20,10 @@
     "readme.md",
     "example/**/*"
   ],
+	"publishConfig": {
+    "registry":"https://npm.pkg.github.com/"
+  },
+	"repository":"https://github.com/shunkongcheung/express-starter.git",
   "keywords": [],
   "author": "Shun Kong Cheung",
   "license": "ISC",
