@@ -130,7 +130,7 @@ module.exports = {
 
 ```
 npm run db:gen <FileName>	# generate migration files
-npm run db:run		# migrate
+npm run db:run			# migrate
 npm run db:revert		# revert migration
 
 ```
