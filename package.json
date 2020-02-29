@@ -1,6 +1,6 @@
 {
   "name": "shunkongcheung-express-starter",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "express, typeorm, typescript restful starter kit with authentication & s3 support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
     "prebuild": "rm -rf dist",
     "prepare": "npm run build",
     "postversion": "git push && git push --tags",
-		"devbuild":"rm -rf dist-example && tsc --project tsconfig-example.json",
+    "devbuild": "rm -rf dist-example && tsc --project tsconfig-example.json",
     "db:gen": "npm run devbuild && typeorm migration:generate -n",
     "db:run": "npm run devbuild && typeorm migration:run",
     "db:revert": "npm run devbuild && typeorm migration:revert"
