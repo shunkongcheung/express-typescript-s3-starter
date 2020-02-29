@@ -31,7 +31,11 @@ const getDeleteController = <
   ) => {
     try {
       const { id } = req.params;
-      const entity = (await model.findOne(id)) as EntityShape;
+      const filterParams: any = { id: Number(id) };
+      const { user } = req;
+      if (user) filterParams.createdBy = user.id;
+
+      const entity = (await model.findOne(filterParams)) as EntityShape;
       if (!entity) return next("Entity does not exist");
 
       await onDelete(entity, req);
