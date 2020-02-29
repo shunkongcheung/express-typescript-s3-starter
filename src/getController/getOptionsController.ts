@@ -71,9 +71,11 @@ function getOptionsController({
   const options = { authenticated };
 
   for (let allowedMethod of allowedMethods) {
-    options[allowedMethod] = getValidationDesc(
-      validations[allowedMethod] || []
-    );
+    try {
+      options[allowedMethod] = getValidationDesc(
+        validations[allowedMethod] || []
+      );
+    } catch (ex) {}
   }
 
   function getOptions(_: any, res: Response) {

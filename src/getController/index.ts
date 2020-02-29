@@ -84,19 +84,19 @@ const getAuthObj = (
 
   if (typeof authenticated === "object")
     return {
-      list: authenticated.list || true,
-      retrieve: authenticated.retrieve || true,
-      create: authenticated.create || true,
-      update: authenticated.update || true,
-      delete: authenticated.delete || true
+      list: authenticated.list !== false,
+      retrieve: authenticated.retrieve !== false,
+      create: authenticated.create !== false,
+      update: authenticated.update !== false,
+      delete: authenticated.delete !== false
     };
   else
     return {
-      list: authenticated,
-      retrieve: authenticated,
-      create: authenticated,
-      update: authenticated,
-      delete: authenticated
+      list: authenticated !== false,
+      retrieve: authenticated !== false,
+      create: authenticated !== false,
+      update: authenticated !== false,
+      delete: authenticated !== false
     };
 };
 
