@@ -11,6 +11,12 @@ const getContent = (req: Request) => {
   return req.query;
 };
 
+const getAuthorizedPerson = (req: Request) => {
+  if (req.user)
+    return `\n\n**USER**\nusername:${req.user.username} id:${req.user.id}\n`;
+  return `\n\n**USER**\nAnonymous\n`;
+};
+
 const getContentDesc = (req: Request, additionalMsg: string = "") => {
   const time = moment().format("YYYY/MM/DD HH:mm");
   const method = req.method.toUpperCase();
@@ -24,7 +30,9 @@ const getContentDesc = (req: Request, additionalMsg: string = "") => {
     ? `\n**MESSAGE**\n${additionalMsg}\n\n**REQUEST**\n`
     : " ";
 
-  return `${time}: ${url} [${method}] ${additionalMsg}${strContent}`;
+  const authPerson = getAuthorizedPerson(req);
+
+  return `${time}: ${url} [${method}] ${additionalMsg}${strContent}${authPerson}`;
 };
 
 export default getContentDesc;
