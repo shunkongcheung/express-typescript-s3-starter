@@ -10,7 +10,10 @@ import getRoutes from "./getRoutes";
 import initDb from "./initDb";
 import { bodyFormatter, errorHandler, logger } from "./middlewares";
 
-interface Params<UserType extends typeof BaseUser> {
+interface Params<
+  UserType extends typeof BaseUser,
+  FileType extends typeof BaseEntity
+> {
   router: ReturnType<Router>;
   userModel: UserType;
   fileModel?: FileType;
@@ -30,7 +33,7 @@ function getExpressApp<
   User extends BaseUser,
   UserType extends typeof BaseUser,
   FileType extends typeof BaseEntity = typeof BaseEntity
->(params: Params<UserType>) {
+>(params: Params<UserType, FileType>) {
   const { router, userModel, fileModel } = params;
 
   // configuration initializiation
