@@ -1,9 +1,11 @@
-import { Column } from "typeorm";
+import { Column, BaseEntity } from "typeorm";
 
 import BaseUser from "./BaseUser";
 import getBaseEntity from "./getBaseEntity";
 
-function getFileEntity<T extends typeof BaseUser>(userModel: T): any {
+function getFileEntity<T extends typeof BaseUser>(
+  userModel: T
+): typeof BaseEntity {
   class BaseFile extends getBaseEntity(userModel) {
     @Column()
     name: string;
