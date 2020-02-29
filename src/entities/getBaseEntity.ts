@@ -8,25 +8,27 @@ import {
 
 import BaseUser from "./BaseUser";
 
+abstract class Base extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "LOCALTIMESTAMP"
+  })
+  createdAt: string;
+
+  @UpdateDateColumn({
+    type: "timestamp",
+    default: () => "LOCALTIMESTAMP"
+  })
+  updatedAt: string;
+}
+
 function getBaseEntity<UserType extends typeof BaseUser>(
   userModel: UserType
-): typeof BaseEntity {
-  abstract class Base extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @CreateDateColumn({
-      type: "timestamp",
-      default: () => "LOCALTIMESTAMP"
-    })
-    createdAt: string;
-
-    @UpdateDateColumn({
-      type: "timestamp",
-      default: () => "LOCALTIMESTAMP"
-    })
-    updatedAt: string;
-
+): typeof Base {
+  abstract class BaseFinal extends Base {
     @ManyToOne(
       () => userModel,
       () => [],
@@ -34,7 +36,7 @@ function getBaseEntity<UserType extends typeof BaseUser>(
     )
     createdBy: UserType;
   }
-  return (Base as unknown) as typeof BaseEntity;
+  return BaseFinal;
 }
 
 export default getBaseEntity;
