@@ -1,9 +1,17 @@
 import { ValidationChain } from "express-validator";
 import { Response } from "express";
 
+interface Authenticated {
+  list?: boolean;
+  retrieve?: boolean;
+  create?: boolean;
+  update?: boolean;
+  delete?: boolean;
+}
+
 interface Props {
   allowedMethods?: Array<Method>;
-  authenticated: boolean;
+  authenticated: boolean | Authenticated;
   validations: { [x: string]: Array<ValidationChain> };
 }
 
