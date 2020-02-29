@@ -3,7 +3,7 @@ import { BaseEntity } from "typeorm";
 
 import { BaseUser } from "./entities";
 
-type GetControllerWithUserProps<
+type GetControllerCatProps<
   T extends typeof BaseEntity,
   S extends BaseEntity
 > = Omit<GetControllerProps<T, S>, "userModel">;
@@ -11,14 +11,14 @@ type GetControllerWithUserProps<
 function getControllerWithUser<UserType extends typeof BaseUser>(
   userModel: UserType
 ) {
-  const getControllerWithUser = <
+  const getControllerConcat = <
     T extends typeof BaseEntity,
     S extends BaseEntity
   >(
-    props: GetControllerWithUserProps<T, S>
+    props: GetControllerCatProps<T, S>
   ) => getController({ ...props, userModel });
 
-  return getControllerWithUser;
+  return getControllerConcat;
 }
 
 export default getControllerWithUser;
