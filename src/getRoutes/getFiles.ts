@@ -71,7 +71,7 @@ function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
 
   const controller = getController({
     model: File,
-    allowedMethods: ["retrieve", "create", "delete"],
+    allowedMethods: ["list", "retrieve", "create", "delete"],
     getEntity,
     onDelete,
     transformCreateData,
