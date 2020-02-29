@@ -1,24 +1,25 @@
 ## Getting Started
 
 ###  Tech stack
-	* typescript
-	* express
-	* express-validator
-	* typeorm
-	* aws-sdk (s3)
-	* serverless-http
-	* serverless
+* typescript
+* express
+* express-validator
+* typeorm
+* aws-sdk (s3)
+* serverless-http
+* serverless
+
+### Feature
+* basic entities and orm
+* authentication and user
+* restful CRUD
+* file management
 
 ### Prerequisites
-* include:
-	* basic entities and orm
-	* authentication and user
-	* restful CRUD
-	* file management
-* package managers
-	* npm
-	* brew (MacOS)
-* install postgres locally
+* npm
+* postgres (install locally with brew  or use cloud service)
+	* use a database in cloud. visit https://www.elephantsql.com/
+	* install postgres locally
 ```
 brew install postgres
 pg_ctl -D /usr/local/var/postgres start
@@ -39,7 +40,6 @@ postgres=# GRANT all privileges on database <database-name> to <username>;
 GRANT
 postgres=# \q
 ```
-* use a database in cloud. visit https://www.elephantsql.com/
 
 ### Environment Variable
 * fill in `.env` from the database detail at https://api.elephantsql.com/console/<database-id>/details:
@@ -95,6 +95,32 @@ module.exports = {
 };
 ```
 
+* add tsconfig.json
+```
+{
+    "compilerOptions": {
+        "module": "commonjs",
+				"emitDecoratorMetadata": true,
+				"experimentalDecorators": true,
+        "esModuleInterop": true,
+        "target": "es6",
+        "noImplicitAny": false,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist-example",
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*"
+    ]
+}
+```
+
 
 ## Usage
 
@@ -102,9 +128,9 @@ module.exports = {
 * npm command usage
 
 ```
-npm run db:gen <FileName> 	# generate migration files
-npm run db:run 							# migrate
-npm run db:revert						# revert migration
+npm run db:gen <FileName>	# generate migration files
+npm run db:run		# migrate
+npm run db:revert		# revert migration
 
 ```
 
@@ -139,7 +165,7 @@ export default Base;
 
 ```
 
-* to use `/files` route, add the following model
+* to use `/files` route, add the following model at  `src/entities/File.ts`
 
 ```
 import { Entity } from "typeorm";
@@ -155,7 +181,7 @@ export default File;
 
 ```
 
-* to add a model. add a file in `src/entities`. (e.g. `src/entities/Todo.ts`)
+* to add any custom model. add a file in `src/entities`. (e.g. `src/entities/Todo.ts`)
 
 ```
 import { Entity, Column } from "typeorm";
@@ -175,20 +201,21 @@ export default Todo;
 ```
 
 ## Express App
+### App
 * `getExpressApp` returns an object containing `app` and `serverlessHandler`
 * two authentication routes are provided: `/auth/login ` and `/auth/register`
 * a CRUD route set is provided for file management: `/files`(GET, POST), `/files/:id` (GET, PUT, DELETE)
 * interface for `getExpressApp` is as follow:
 ```
-interface Params<UserType extends typeof BaseUser> {
+interface Params<UserType extends typeof BaseUser, FileType extends typeof BaseEntity> {
   router: ReturnType<Router>;
   userModel: UserType;
+	fileModel?:FileType;
 }
 ```
 * router: 		any express router
 * userModel:	an entity that extends BaseUser, like the one above
-
-
+* fileModel:	an entity that extends getFileEntity(User)
 
 ### Route
 * getController retun an router object. It accepts the following props
@@ -252,15 +279,23 @@ type TUpdateData<T extends BaseEntity> = (
 * validations:					express-validators middleware for each restful methods
 
 
-### Example
+## Example
 * Example can be found in `example`
-	1. clone the repo from `git clone https://github.com/shunkongcheung/express-starter && cd express-starter`
+	1. clone the repo by:
+
+```
+git clone https://github.com/shunkongcheung/express-starter
+cd express-starter
+```
+
 	2. setup `.env` as stated above (at least JWT_SECRET and TYPEORM_*)
 	3. run the following commands:
+
 ```
 npm run db:run
 npm run dev
 ```
+
 	4. visit the following routes (`/files` is only available with S3 setup):
 		* `http://localhost:8000`
 		* `http://localhost:8000/auth/register`(POST)
