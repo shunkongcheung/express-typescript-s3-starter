@@ -20,7 +20,11 @@ const defaultGetEntity = async <
 >(
   model: EntityType,
   req: Request
-) => model.findOne(req.params.id) as Promise<S>;
+) => {
+  const params: any = { id: Number(req.params.id) };
+  if (req.user) params.createdBy = req.user.id;
+  return model.findOne(params) as Promise<S>;
+};
 
 const getRetrieveController = <EntityType extends typeof BaseEntity>({
   model,

@@ -4,10 +4,11 @@ import { BaseEntity } from "typeorm";
 
 import flattenCreatedBy from "./flattenCreatedBy";
 
-interface PaginateParam {
+interface ListParams {
   skip: number;
   take: number;
   order?: { [x: string]: "DESC" | "ASC" };
+  where?: Array<{ [key: string]: any }>;
 }
 
 interface Props<EntityType extends typeof BaseEntity> {
@@ -17,15 +18,15 @@ interface Props<EntityType extends typeof BaseEntity> {
 
 type FilterEntities<EntityType extends typeof BaseEntity> = (
   model: EntityType,
-  pagainateParams: PaginateParam,
+  listParams: ListParams,
   req: Request
 ) => Promise<Array<any>>;
 
 const defaultFilterEntities = async <EntityType extends typeof BaseEntity>(
   model: EntityType,
-  paginateParams: PaginateParam
+  listParams: object
 ) => {
-  return model.find(paginateParams);
+  return model.find(listParams);
 };
 
 const getListController = <EntityType extends typeof BaseEntity>({
@@ -44,14 +45,17 @@ const getListController = <EntityType extends typeof BaseEntity>({
         order = "createdAt",
         orderDir = "DESC"
       } = req.query;
+      const { user } = req;
 
       const orderVal = orderDir === "ASC" ? "ASC" : "DESC";
-      const paginateParams = {
+      const listParams: ListParams = {
         skip: Number(pageSize) * (Number(page) - 1),
         take: Number(pageSize),
         order: order ? { [order]: orderVal as "ASC" | "DESC" } : undefined
       };
-      const results = await filterEntities(model, paginateParams, req);
+      if (user) listParams.where = [{ createdBy: user.id }];
+
+      const results = await filterEntities(model, listParams, req);
       res.status(200).json(flattenCreatedBy(results));
       next();
     } catch (err) {

@@ -279,6 +279,12 @@ type TUpdateData<T extends BaseEntity> = (
 * model:								the model for executing the restful CRUD actions
 * validations:					express-validators middleware for each restful methods
 
+### Authentication
+* By default, `retrieve`, `list`, `update`, `delete` are allowed on object created by the same user only if authenticated is true
+* For `retrieve` and `list`, by utlizing `filterEntities` and `getEntity`, this behaviour can be changed
+* For `update` and `delete`, once authenticated is true, this behavious cant be overrided
+* However, if this is really necessary, you may either set authenticated to be false, or simply use `create` to do the mutation
+
 ### Options
 * for each route created by getController, root OPTIONS will return the field required.
 * the information is generated from the validations user provided (if it is a middleware of express-validators)
@@ -300,7 +306,6 @@ Example can be found in `example`
 
 ## Road MAP
 * handle different file types for `/files`
-* if authenticated, only allow access of object created by the same user
 
 
 ## Authors

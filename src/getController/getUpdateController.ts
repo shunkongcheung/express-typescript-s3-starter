@@ -3,10 +3,10 @@ import { BaseEntity } from "typeorm";
 import { matchedData, param } from "express-validator";
 
 interface Props<
-  EntityShapeType extends typeof BaseEntity,
+  EntityType extends typeof BaseEntity,
   EntityShape extends BaseEntity
 > {
-  model: EntityShapeType;
+  model: EntityType;
   transformUpdateData?: TransformUpdateData<EntityShape>;
 }
 
@@ -23,12 +23,12 @@ const defaultTransformUpdateData: TransformUpdateData<any> = async entityData =>
   entityData;
 
 const getUpdateController = <
-  EntityShapeType extends typeof BaseEntity,
+  EntityType extends typeof BaseEntity,
   EntityShape extends BaseEntity
 >({
   model,
   transformUpdateData = defaultTransformUpdateData
-}: Props<EntityShapeType, EntityShape>) => {
+}: Props<EntityType, EntityShape>) => {
   const defaultUpdateValidation = [param("id").isNumeric()];
 
   const updateEntity = async (
@@ -38,7 +38,12 @@ const getUpdateController = <
   ) => {
     try {
       const { id } = req.params;
-      const entity = ((await model.findOne(id)) as unknown) as any;
+      const params: any = { id: Number(id) };
+      if (req.user) params.createdBy = req.user.id;
+
+      const entity = (await model.findOne(params)) as any;
+      if (!entity) return next("Entity does not exist");
+
       const entityData = matchedData(req);
       const transformRet = await transformUpdateData(entityData, entity);
 

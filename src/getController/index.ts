@@ -23,6 +23,13 @@ interface Authenticated {
   delete?: boolean;
 }
 
+interface ListParams {
+  skip: number;
+  take: number;
+  order?: { [x: string]: "DESC" | "ASC" };
+  where?: Array<{ [key: string]: any }>;
+}
+
 export interface Props<
   EntityType extends typeof BaseEntity,
   EntityShape extends BaseEntity
@@ -45,7 +52,7 @@ interface Data {
 
 type FilterEntities<T extends typeof BaseEntity> = (
   m: T,
-  p: object,
+  p: ListParams,
   r: Request
 ) => Promise<Array<any>>;
 

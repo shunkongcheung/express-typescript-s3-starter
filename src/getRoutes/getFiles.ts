@@ -62,8 +62,12 @@ function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
   };
 
   const getEntity = async (model: typeof File, req: Request) => {
-    const { id } = req.params;
-    const entity = await model.findOne(id);
+    const params: any = { id: Number(req.params.id) };
+    if (req.user) params.createdBy = req.user.id;
+
+    const entity = await model.findOne(params);
+    if (!entity) return null;
+
     const data = await downloadFromS3((entity as any).s3Key);
     return data;
   };
