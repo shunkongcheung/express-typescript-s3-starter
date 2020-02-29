@@ -1,14 +1,14 @@
 {
   "name": "shunkongcheung-express-starter",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "express, typeorm, typescript restful starter kit with authentication & s3 support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "concurrently \" tsc -w \" \"nodemon ./dist/example/local-dev.js\"",
     "prebuild": "rm -rf dist",
-		"prepare": "npm run build",
-		"postversion": "git push && git push --tags",
+    "prepare": "npm run build",
+    "postversion": "git push && git push --tags",
     "build": "tsc",
     "db:gen": "npm run build && typeorm migration:generate -n",
     "db:run": "npm run build && typeorm migration:run",
