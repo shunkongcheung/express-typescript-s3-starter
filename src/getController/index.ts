@@ -15,12 +15,20 @@ type Action = (req: Request, res: Response, next: NextFunction) => any;
 
 type Method = "list" | "retrieve" | "create" | "update" | "delete";
 
+interface Authenticated {
+  list?: boolean;
+  retrieve?: boolean;
+  create?: boolean;
+  update?: boolean;
+  delete?: boolean;
+}
+
 export interface Props<
   EntityType extends typeof BaseEntity,
   EntityShape extends BaseEntity
 > {
   allowedMethods?: Array<Method>;
-  authenticated?: boolean;
+  authenticated?: boolean | Authenticated;
   filterEntities?: FilterEntities<EntityType>;
   getEntity?: GetEntity<EntityType>;
   model: EntityType;
@@ -60,6 +68,30 @@ type TUpdateData<T extends BaseEntity> = (
 
 const isAllowed = (method: Method, allowedMethods: Array<Method>) =>
   !allowedMethods || allowedMethods.includes(method);
+
+const getAuthObj = (
+  authenticated?: boolean | Authenticated
+): Required<Authenticated> => {
+  if (authenticated === null || authenticated === undefined)
+    authenticated = true;
+
+  if (typeof authenticated === "object")
+    return {
+      list: authenticated.list || true,
+      retrieve: authenticated.retrieve || true,
+      create: authenticated.create || true,
+      update: authenticated.update || true,
+      delete: authenticated.delete || true
+    };
+  else
+    return {
+      list: authenticated,
+      retrieve: authenticated,
+      create: authenticated,
+      update: authenticated,
+      delete: authenticated
+    };
+};
 
 const addRoute = <T extends typeof BaseUser>(
   router: any,
@@ -131,22 +163,38 @@ const getController = <
   });
 
   const router = Router();
-  const isAuth = authenticated !== false; // undefined / null / true will be true
+  const auth = getAuthObj(authenticated);
 
   if (isAllowed("create", allowedMethods))
-    addRoute(router, "post", "/", isAuth, u, fVals.create, createEntity);
+    addRoute(router, "post", "/", auth.create, u, fVals.create, createEntity);
 
   if (isAllowed("delete", allowedMethods))
-    addRoute(router, "delete", "/:id", isAuth, u, fVals.delete, deleteEntity);
+    addRoute(
+      router,
+      "delete",
+      "/:id",
+      auth.delete,
+      u,
+      fVals.delete,
+      deleteEntity
+    );
 
   if (isAllowed("list", allowedMethods))
-    addRoute(router, "get", "/", isAuth, u, fVals.list, listEntities);
+    addRoute(router, "get", "/", auth.list, u, fVals.list, listEntities);
 
   if (isAllowed("retrieve", allowedMethods))
-    addRoute(router, "get", "/:id", isAuth, u, fVals.retrieve, retrieveEntity);
+    addRoute(
+      router,
+      "get",
+      "/:id",
+      auth.retrieve,
+      u,
+      fVals.retrieve,
+      retrieveEntity
+    );
 
   if (isAllowed("update", allowedMethods))
-    addRoute(router, "put", "/:id", isAuth, u, fVals.update, updateEntity);
+    addRoute(router, "put", "/:id", auth.update, u, fVals.update, updateEntity);
 
   router.options("/", getOptions);
 
