@@ -4,10 +4,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import serverless from "serverless-http";
 
+import getController, { Props as GetControllerProps } from "./getController";
 import { BaseUser } from "./entities";
 import getRoutes from "./getRoutes";
 import initDb from "./initDb";
 import { bodyFormatter, errorHandler, logger } from "./middlewares";
+import { BaseEntity } from "typeorm";
 
 interface Params<UserType extends typeof BaseUser> {
   router: ReturnType<Router>;
@@ -23,6 +25,11 @@ async function dbMiddleware(_: any, __: any, next: NextFunction) {
   }
   next();
 }
+
+type GetControllerWithUserProps<
+  T extends typeof BaseEntity,
+  S extends BaseEntity
+> = Omit<GetControllerProps<T, S>, "userModel">;
 
 function getExpressApp<User extends BaseUser, UserType extends typeof BaseUser>(
   params: Params<UserType>
@@ -56,7 +63,13 @@ function getExpressApp<User extends BaseUser, UserType extends typeof BaseUser>(
   app.use(errorHandler); // error handling. after all route
 
   const serverlessHandler = serverless(app);
-  return { app, serverlessHandler };
+  const getControllerWithUser = <
+    T extends typeof BaseEntity,
+    S extends BaseEntity
+  >(
+    props: GetControllerWithUserProps<T, S>
+  ) => getController({ ...props, userModel });
+  return { app, getController: getControllerWithUser, serverlessHandler };
 }
 
 export default getExpressApp;
