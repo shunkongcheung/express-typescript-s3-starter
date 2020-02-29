@@ -1,16 +1,19 @@
 import express from "express";
+import { BaseEntity } from "typeorm";
 
 import getAuth from "./getAuth";
 import getFiles from "./getFiles";
 import { BaseUser } from "../entities";
 
-function getRoutes<User extends BaseUser, UserType extends typeof BaseUser>(
-  userModel: UserType
-) {
+function getRoutes<
+  U extends BaseUser,
+  UT extends typeof BaseUser,
+  F extends typeof BaseEntity
+>(userModel: UT, fileModel?: F) {
   const router = express.Router();
 
-  router.use("/auth", getAuth<User, UserType>(userModel));
-  router.use("/files", getFiles(userModel));
+  router.use("/auth", getAuth<U, UT>(userModel));
+  if (fileModel) router.use("/files", getFiles(userModel, fileModel));
 
   return router;
 }
