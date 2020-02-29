@@ -1,15 +1,37 @@
-import { Request } from "express";
+import { Request, Response, NextFunction } from "express";
 import AWS from "aws-sdk";
+import * as jwt from "jsonwebtoken";
 import multer from "multer";
 import { BaseEntity } from "typeorm";
 
 import getController from "../getController";
 import { BaseUser } from "../entities";
+import { query } from "express-validator";
 
 function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
   userModel: U,
   File: F
 ) {
+  const authQueryValidator = query("token").isString();
+
+  const authByQueryMiddleware = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { JWT_SECRET = "" } = process.env;
+    const token = req.query["token"];
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const { username } = decoded as { username: string };
+      const user = await userModel.findOne({ username });
+      (req as any).user = user;
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
+
   const fileMiddleware = multer({
     limits: {
       fileSize: 1000000
@@ -91,9 +113,14 @@ function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
     onDelete,
     transformCreateData,
     userModel,
+    authenticated: { retrieve: false },
     // this is a hack. instead of giving validation middleware, just give it the file middleware
-    validations: { create: fileMiddleware as any }
+    validations: {
+      retrieve: [authQueryValidator, authByQueryMiddleware] as any,
+      create: fileMiddleware as any
+    }
   });
+
   return controller;
 }
 
