@@ -1,13 +1,15 @@
 import { Request } from "express";
 import AWS from "aws-sdk";
 import multer from "multer";
+import { BaseEntity } from "typeorm";
 
 import getController from "../getController";
-import { BaseUser, getFileEntity } from "../entities";
+import { BaseUser } from "../entities";
 
-function getFiles<UserType extends typeof BaseUser>(userModel: UserType) {
-  const FileEntity = getFileEntity(userModel);
-
+function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
+  userModel: U,
+  File: F
+) {
   const fileMiddleware = multer({
     limits: {
       fileSize: 1000000
@@ -49,10 +51,10 @@ function getFiles<UserType extends typeof BaseUser>(userModel: UserType) {
     return retData;
   };
 
-  const getEntity = async (model: typeof FileEntity, req: Request) => {
+  const getEntity = async (model: typeof File, req: Request) => {
     const { id } = req.params;
     const entity = await model.findOne(id);
-    const data = await downloadFromS3(entity.s3Key);
+    const data = await downloadFromS3((entity as any).s3Key);
     return data;
   };
 
@@ -68,7 +70,7 @@ function getFiles<UserType extends typeof BaseUser>(userModel: UserType) {
   };
 
   const controller = getController({
-    model: FileEntity,
+    model: File,
     allowedMethods: ["retrieve", "create", "delete"],
     getEntity,
     onDelete,
