@@ -301,7 +301,7 @@ Example can be found in `example`
 
 ## Authors
 
-N/A
+Shun Kong Cheung (github)[https://github.com/shunkongcheung]
 
 ## License
 
