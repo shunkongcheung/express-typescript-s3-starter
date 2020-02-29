@@ -8,7 +8,9 @@ import {
 
 import BaseUser from "./BaseUser";
 
-function getBaseEntity<UserType extends typeof BaseUser>(userModel: UserType) {
+function getBaseEntity<UserType extends typeof BaseUser>(
+  userModel: UserType
+): any {
   abstract class Base extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;

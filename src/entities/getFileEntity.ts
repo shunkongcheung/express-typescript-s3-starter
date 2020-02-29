@@ -3,7 +3,7 @@ import { Column } from "typeorm";
 import BaseUser from "./BaseUser";
 import getBaseEntity from "./getBaseEntity";
 
-function getFileEntity<T extends typeof BaseUser>(userModel: T) {
+function getFileEntity<T extends typeof BaseUser>(userModel: T): any {
   class BaseFile extends getBaseEntity(userModel) {
     @Column()
     name: string;
