@@ -13,6 +13,7 @@
 * basic entities and orm
 * authentication and user
 * restful CRUD
+* OPTIONS to get request shape
 * file management
 
 ### Prerequisites
@@ -129,7 +130,7 @@ module.exports = {
 
 ```
 npm run db:gen <FileName>	# generate migration files
-npm run db:run		# migrate
+npm run db:run			# migrate
 npm run db:revert		# revert migration
 
 ```
@@ -200,7 +201,7 @@ export default Todo;
 
 ```
 
-## Express App
+## Description
 ### App
 * `getExpressApp` returns an object containing `app` and `serverlessHandler`
 * two authentication routes are provided: `/auth/login ` and `/auth/register`
@@ -278,6 +279,9 @@ type TUpdateData<T extends BaseEntity> = (
 * model:								the model for executing the restful CRUD actions
 * validations:					express-validators middleware for each restful methods
 
+### Options
+* for each route created by getController, root OPTIONS will return the field required.
+* the information is generated from the validations user provided (if it is a middleware of express-validators)
 
 ## Example
 Example can be found in `example`
