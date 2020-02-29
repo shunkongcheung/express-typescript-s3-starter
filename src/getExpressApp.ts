@@ -57,7 +57,7 @@ function getExpressApp<User extends BaseUser, UserType extends typeof BaseUser>(
 
   const serverlessHandler = serverless(app);
 
-  return { app, getController: getControllerWithUser, serverlessHandler };
+  return { app, serverlessHandler };
 }
 
 export default getExpressApp;
