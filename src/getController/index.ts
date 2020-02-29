@@ -17,8 +17,7 @@ type Method = "list" | "retrieve" | "create" | "update" | "delete";
 
 interface Props<
   EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity,
-  UserType extends typeof BaseUser
+  EntityShape extends BaseEntity
 > {
   allowedMethods?: Array<Method>;
   authenticated?: boolean;
@@ -28,7 +27,7 @@ interface Props<
   onDelete?: OnDelete<EntityShape>;
   transformCreateData?: TCreateData;
   transformUpdateData?: TUpdateData<EntityShape>;
-  userModel: UserType;
+  userModel: typeof BaseUser;
   validations?: { [x: string]: Array<ValidationChain> };
 }
 
@@ -83,10 +82,9 @@ const addRoute = <T extends typeof BaseUser>(
 
 const getController = <
   EntityType extends typeof BaseEntity,
-  EntityShape extends BaseEntity,
-  UserType extends typeof BaseUser
+  EntityShape extends BaseEntity
 >(
-  props: Props<EntityType, EntityShape, UserType>
+  props: Props<EntityType, EntityShape>
 ) => {
   const {
     allowedMethods,
