@@ -2,6 +2,7 @@ import express, { NextFunction, Router } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
+import serverless from "serverless-http";
 
 import { BaseUser } from "./entities";
 import getRoutes from "./getRoutes";
@@ -54,7 +55,8 @@ function getExpressApp<User extends BaseUser, UserType extends typeof BaseUser>(
   app.use(logger);
   app.use(errorHandler); // error handling. after all route
 
-  return app;
+  const serverlessHandler = serverless(app);
+  return { app, serverlessHandler };
 }
 
 export default getExpressApp;
