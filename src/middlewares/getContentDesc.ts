@@ -1,5 +1,5 @@
 import { Request } from "express";
-import moment from "moment";
+import getTimeOrTab from "./getTimeOrTab";
 
 const getContent = (req: Request) => {
   if (req.method.toLowerCase() === "put") {
@@ -18,7 +18,7 @@ const getAuthorizedPerson = (req: Request) => {
 };
 
 const getContentDesc = (req: Request, additionalMsg: string = "") => {
-  const time = moment().format("YYYY/MM/DD HH:mm");
+  const time = getTimeOrTab();
   const method = req.method.toUpperCase();
   const url = req.originalUrl || "/";
   const content = getContent(req);
@@ -32,7 +32,7 @@ const getContentDesc = (req: Request, additionalMsg: string = "") => {
 
   const authPerson = getAuthorizedPerson(req);
 
-  return `${time}: ${url} [${method}] ${additionalMsg}${strContent}${authPerson}`;
+  return `${time}${url} [${method}] ${additionalMsg}${strContent}${authPerson}`;
 };
 
 export default getContentDesc;
