@@ -11,8 +11,7 @@ import {
   bodyFormatter,
   dbMiddleware,
   errorHandler,
-  logger,
-  dbMiddleware
+  logger
 } from "./middlewares";
 
 interface Params<
