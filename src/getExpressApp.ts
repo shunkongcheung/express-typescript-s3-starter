@@ -1,4 +1,4 @@
-import express, { NextFunction, Router } from "express";
+import express, { Router } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -7,8 +7,13 @@ import { BaseEntity } from "typeorm";
 
 import { BaseUser } from "./entities";
 import getRoutes from "./getRoutes";
-import initDb from "./initDb";
-import { bodyFormatter, errorHandler, logger } from "./middlewares";
+import {
+  bodyFormatter,
+  dbMiddleware,
+  errorHandler,
+  logger,
+  dbMiddleware
+} from "./middlewares";
 
 interface Params<
   UserType extends typeof BaseUser,
@@ -20,15 +25,6 @@ interface Params<
 }
 
 // database initializiation
-async function dbMiddleware(_: any, __: any, next: NextFunction) {
-  try {
-    await initDb();
-  } catch (err) {
-    next(err.message);
-  }
-  next();
-}
-
 function getExpressApp<
   User extends BaseUser,
   UserType extends typeof BaseUser,

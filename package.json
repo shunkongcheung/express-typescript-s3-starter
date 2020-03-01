@@ -1,5 +1,5 @@
 {
-  "name": "shunkongcheung-express-starter",
+  "name": "express-typescript-s3-starter",
   "version": "1.0.14",
   "description": "express, typeorm, typescript restful starter kit with authentication & s3 support",
   "main": "dist/index.js",
