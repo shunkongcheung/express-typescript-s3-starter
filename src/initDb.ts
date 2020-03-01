@@ -25,24 +25,25 @@ async function getOrCreateConnection(config: ConnectionOptions) {
 }
 
 async function initDb() {
+  const startTime = moment().format("YYYY/MM/DD HH:mm");
+  console.debug(`${startTime}: begin database connection connected.`);
+
   const host = process.env.TYPEORM_HOST;
   const username = process.env.TYPEORM_USERNAME;
   const password = process.env.TYPEORM_PASSWORD;
   const { database, port, ...rest } = (await getConnectionOptions()) as any;
 
-  const time = moment().format("YYYY/MM/DD HH:mm");
   try {
     const config = { database, port, host, username, password, ...rest };
-
     const [hasConn, isConnected] = await getOrCreateConnection(config);
 
-    console.log(
-      `${time}: postgresql://${username}:*******@${host}:${port}/${database} ${hasConn} connection and ${isConnected} connected.`
-    );
+    const endTime = moment().format("YYYY/MM/DD HH:mm");
+    const dbgMsg = `${endTime}: postgresql://${username}:*******@${host}:${port}/${database} ${hasConn} connection and ${isConnected} connected.`;
+    console.debug(dbgMsg);
   } catch (err) {
-    console.error(
-      `${time}: failed postgresql://${username}:*******@${host}:${port}/${database}. ${err}`
-    );
+    const endTime = moment().format("YYYY/MM/DD HH:mm");
+    const errMsg = `${endTime}: failed postgresql://${username}:*******@${host}:${port}/${database}. ${err}`;
+    console.error(errMsg);
     throw err;
   }
 }
