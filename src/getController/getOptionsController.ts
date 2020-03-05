@@ -46,20 +46,22 @@ function getValidationDesc(
 ): Array<Desc> {
   if (!Array.isArray(validationChain)) return [];
   return validationChain.map((validation: ValidationChain) => {
-    // @ts-ignore
-    const meta = validation.builder.stack.reduce(
-      (o: DescType, c: any) => o || getValidatorMeta(c),
-      null
-    );
-    return {
+    try {
       // @ts-ignore
-      name: validation.builder.fields[0],
-      // @ts-ignore
-      required: !validation.builder.optional,
-      // @ts-ignore
-      location: validation.builder.locations[0],
-      ...meta
-    };
+      const meta = validation.builder.stack.reduce(
+        (o: DescType, c: any) => o || getValidatorMeta(c),
+        null
+      );
+      return {
+        // @ts-ignore
+        name: validation.builder.fields[0],
+        // @ts-ignore
+        required: !validation.builder.optional,
+        // @ts-ignore
+        location: validation.builder.locations[0],
+        ...meta
+      };
+    } catch (ex) {}
   });
 }
 
@@ -71,11 +73,9 @@ function getOptionsController({
   const options = { authenticated };
 
   for (let allowedMethod of allowedMethods) {
-    try {
-      options[allowedMethod] = getValidationDesc(
-        validations[allowedMethod] || []
-      );
-    } catch (ex) {}
+    options[allowedMethod] = getValidationDesc(
+      validations[allowedMethod] || []
+    );
   }
 
   function getOptions(_: any, res: Response) {
