@@ -45,24 +45,26 @@ function getValidationDesc(
   validationChain: Array<ValidationChain>
 ): Array<Desc> {
   if (!Array.isArray(validationChain)) return [];
-  return validationChain.map((validation: ValidationChain) => {
-    try {
-      // @ts-ignore
-      const meta = validation.builder.stack.reduce(
-        (o: DescType, c: any) => o || getValidatorMeta(c),
-        null
-      );
-      return {
+  return validationChain
+    .map((validation: ValidationChain) => {
+      try {
         // @ts-ignore
-        name: validation.builder.fields[0],
-        // @ts-ignore
-        required: !validation.builder.optional,
-        // @ts-ignore
-        location: validation.builder.locations[0],
-        ...meta
-      };
-    } catch (ex) {}
-  });
+        const meta = validation.builder.stack.reduce(
+          (o: DescType, c: any) => o || getValidatorMeta(c),
+          null
+        );
+        return {
+          // @ts-ignore
+          name: validation.builder.fields[0],
+          // @ts-ignore
+          required: !validation.builder.optional,
+          // @ts-ignore
+          location: validation.builder.locations[0],
+          ...meta
+        };
+      } catch (ex) {}
+    })
+    .filter(itm => !!itm);
 }
 
 function getOptionsController({
