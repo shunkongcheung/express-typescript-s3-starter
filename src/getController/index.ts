@@ -126,6 +126,7 @@ const getController = <
 >(
   props: Props<EntityType, EntityShape>
 ) => {
+  const defaultRetrieveUrl = "/:id";
   const {
     allowedMethods,
     authenticated,
@@ -133,7 +134,7 @@ const getController = <
     getEntity,
     model,
     onDelete,
-    retrieveUrl = "/:id",
+    retrieveUrl = defaultRetrieveUrl,
     transformCreateData,
     transformUpdateData,
     userModel: u,
@@ -162,7 +163,9 @@ const getController = <
     create: validations.create,
     delete: deleteValidation,
     list: (validations?.list ?? []).concat(defaultListValidation),
-    retrieve: (validations?.retrieve ?? []).concat(retrieveValidation),
+    retrieve: (validations?.retrieve ?? []).concat(
+      retrieveUrl === defaultRetrieveUrl ? retrieveValidation : []
+    ),
     update: (validations?.update ?? []).concat(defaultUpdateValidation)
   };
   const { getOptions } = getOptionsController({
