@@ -40,6 +40,7 @@ export interface Props<
   getEntity?: GetEntity<EntityType>;
   model: EntityType;
   onDelete?: OnDelete<EntityShape>;
+  retrieveUrl?: string;
   transformCreateData?: TCreateData;
   transformUpdateData?: TUpdateData<EntityShape>;
   userModel: typeof BaseUser;
@@ -132,6 +133,7 @@ const getController = <
     getEntity,
     model,
     onDelete,
+    retrieveUrl = "/:id",
     transformCreateData,
     transformUpdateData,
     userModel: u,
@@ -193,7 +195,7 @@ const getController = <
     addRoute(
       router,
       "get",
-      "/:id",
+      retrieveUrl,
       auth.retrieve,
       u,
       fVals.retrieve,
