@@ -20,13 +20,13 @@ type FilterEntities<EntityType extends typeof BaseEntity> = (
   model: EntityType,
   listParams: ListParams,
   req: Request
-) => Promise<Array<any>>;
+) => Promise<[Array<any>, number]>;
 
 const defaultFilterEntities = async <EntityType extends typeof BaseEntity>(
   model: EntityType,
   listParams: object
 ) => {
-  return model.find(listParams);
+  return model.findAndCount(listParams);
 };
 
 const getListController = <EntityType extends typeof BaseEntity>({
@@ -55,8 +55,8 @@ const getListController = <EntityType extends typeof BaseEntity>({
       };
       if (user) listParams.where = [{ createdBy: user.id }];
 
-      const results = await filterEntities(model, listParams, req);
-      res.status(200).json(flattenCreatedBy(results));
+      const [results, count] = await filterEntities(model, listParams, req);
+      res.status(200).json({ count, data: flattenCreatedBy(results) });
       next();
     } catch (err) {
       next(err.message);

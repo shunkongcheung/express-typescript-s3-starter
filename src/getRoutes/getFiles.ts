@@ -74,13 +74,14 @@ function getFiles<U extends typeof BaseUser, F extends typeof BaseEntity>(
   };
 
   const filterEntities = async (model: F, params: object) => {
-    const entities = await model.find(params);
-    return entities.map((entity: any) => {
+    const [entities, count] = await model.findAndCount(params);
+    const retEntries = entities.map((entity: any) => {
       const retData = { ...entity };
       delete retData.s3Key;
       delete retData.url;
       return retData;
     });
+    return [retEntries, count] as [Array<any>, number];
   };
 
   const getEntity = async (model: typeof File, req: Request) => {
