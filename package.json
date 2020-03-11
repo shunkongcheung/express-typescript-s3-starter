@@ -1,6 +1,6 @@
 {
   "name": "express-typescript-s3-starter",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "express, typeorm, typescript restful starter kit with authentication & s3 support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
