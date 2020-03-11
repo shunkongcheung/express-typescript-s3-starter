@@ -54,7 +54,7 @@ type FilterEntities<T extends typeof BaseEntity> = (
   m: T,
   p: ListParams,
   r: Request
-) => Promise<Array<any>>;
+) => Promise<[Array<any>, number]>;
 
 type GetEntity<T extends typeof BaseEntity> = (
   model: T,
